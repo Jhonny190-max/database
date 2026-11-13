@@ -1,40 +1,89 @@
+
 <!DOCTYPE html>
 <html lang="es" data-theme="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GYM SYSTEM</title>
-<link rel="icon" href="assets/logo.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="estilos.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>GYM SYSTEM</title>
+
+    <link rel="stylesheet" href="estilos.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
-<aside class="sidebar" id="sidebar">
-  <div class="brand"><i data-lucide="dumbbell"></i><span>GYM SYSTEM</span></div>
-  <nav id="nav">
-    <a href="#" data-v="dashboard" class="active"><i data-lucide="layout-dashboard"></i>Dashboard</a>
-    <a href="#" data-v="alumnos"><i data-lucide="users"></i>Alumnos</a>
-    <a href="#" data-v="entrenadores"><i data-lucide="user-check"></i>Entrenadores</a>
-    <a href="#" data-v="planes"><i data-lucide="tags"></i>Planes</a>
-    <a href="#" data-v="pagos"><i data-lucide="credit-card"></i>Pagos</a>
-    <a href="#" data-v="asistencias"><i data-lucide="calendar-check"></i>Asistencia</a>
-  </nav>
-</aside>
-<div class="main">
-  <header class="topbar">
-    <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menú"><i data-lucide="menu"></i></button>
-    <div class="date" id="today"></div>
-    <div class="spacer"></div>
-    <button class="icon-btn" id="themeBtn" aria-label="Cambiar tema"><i data-lucide="sun-moon"></i></button>
-    <div class="profile"><div class="avatar">AD</div><div><strong>Administrador</strong><small>Perfil</small></div></div>
-  </header>
-  <main id="view"></main>
-</div>
-<div class="modal-bg" id="modal"><div class="modal" id="modalBox"></div></div>
-<div class="toasts" id="toasts"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="https://unpkg.com/lucide@0.453.0/dist/umd/lucide.min.js"></script>
-<script src="javascript.js"></script>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">
+            <i data-lucide="dumbbell"></i>
+            <span>GYM SYSTEM</span>
+        </div>
+
+        <nav id="nav">
+            <a href="#" data-v="dashboard" class="active">
+                <i data-lucide="layout-dashboard"></i> Dashboard
+            </a>
+
+            <a href="#" data-v="alumnos">
+                <i data-lucide="users"></i> Alumnos
+            </a>
+
+            <a href="#" data-v="entrenadores">
+                <i data-lucide="user-check"></i> Entrenadores
+            </a>
+
+            <a href="#" data-v="planes">
+                <i data-lucide="tags"></i> Planes
+            </a>
+
+            <a href="#" data-v="pagos">
+                <i data-lucide="credit-card"></i> Pagos
+            </a>
+
+            <a href="#" data-v="asistencias">
+                <i data-lucide="calendar-check"></i> Asistencia
+            </a>
+        </nav>
+    </aside>
+
+    <div class="main">
+
+        <header class="topbar">
+            <button class="icon-btn menu-btn" id="menuBtn">
+                <i data-lucide="menu"></i>
+            </button>
+
+            <div class="date" id="today"></div>
+
+            <div class="spacer"></div>
+
+            <button class="icon-btn" id="themeBtn">
+                <i data-lucide="sun-moon"></i>
+            </button>
+
+            <div class="profile">
+                <div class="avatar">AD</div>
+                <div>
+                    <strong>Administrador</strong>
+                    <small>Perfil</small>
+                </div>
+            </div>
+        </header>
+
+        <main id="view"></main>
+
+    </div>
+
+    <div class="modal-bg" id="modal">
+        <div class="modal" id="modalBox"></div>
+    </div>
+
+    <div class="toasts" id="toasts"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/lucide@0.453.0/dist/umd/lucide.min.js"></script>
+    <script src="javascript.js"></script>
+
 </body>
 </html>

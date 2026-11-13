@@ -58,3 +58,81 @@ label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
 @media(max-width:900px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:none}.main{margin-left:0}.menu-btn{display:grid}.topbar,#view{padding-left:16px;padding-right:16px}.profile div:last-child{display:none}}
 @media(max-width:560px){.form{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* =====================================
+   INSCRIPCION INTEGRADA
+===================================== */
+
+.modal-subtitle {
+    color: var(--muted, #999);
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.enroll-payment {
+    margin-top: 22px;
+    padding: 18px;
+    border: 1px solid var(--border, #333);
+    border-radius: 12px;
+    background: var(--surface, #202020);
+}
+
+.enroll-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.enroll-title strong {
+    display: block;
+    font-size: 15px;
+}
+
+.enroll-title small {
+    color: var(--muted, #999);
+    font-size: 12px;
+}
+
+.enroll-payment .form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.enroll-payment label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 13px;
+}
+
+.enroll-payment input,
+.enroll-payment select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid var(--border, #444);
+    border-radius: 8px;
+    background: var(--bg, #151515);
+    color: var(--text, white);
+}
+
+.hint,
+.form-note {
+    color: var(--muted, #999);
+    font-size: 12px;
+    margin-top: 12px;
+}
+
+.text-btn {
+    background: none;
+    border: none;
+    color: var(--primary, #eab308);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+@media (max-width: 600px) {
+    .enroll-payment .form {
+        grid-template-columns: 1fr;
+    }
+}
