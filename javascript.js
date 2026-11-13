@@ -51,6 +51,48 @@ const fechaHoy = () => {
     return local.toISOString().slice(0, 10);
 };
 
+// VALIDACION DE EDAD MINIMA: 13 AÑOS
+function calcularEdad(fechaNacimiento) {
+    if (!fechaNacimiento) return null;
+
+    const nacimiento = new Date(fechaNacimiento + 'T00:00:00');
+    const hoy = new Date(fechaHoy() + 'T00:00:00');
+
+    if (Number.isNaN(nacimiento.getTime())) return null;
+    if (nacimiento > hoy) return null;
+
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+
+    const aunNoCumple =
+        hoy.getMonth() < nacimiento.getMonth() ||
+        (
+            hoy.getMonth() === nacimiento.getMonth() &&
+            hoy.getDate() < nacimiento.getDate()
+        );
+
+    if (aunNoCumple) edad--;
+
+    return edad;
+}
+
+function validarEdadAlumno(fechaNacimiento) {
+    if (!fechaNacimiento) {
+        return 'Debes ingresar la fecha de nacimiento.';
+    }
+
+    const edad = calcularEdad(fechaNacimiento);
+
+    if (edad === null) {
+        return 'La fecha de nacimiento no es válida.';
+    }
+
+    if (edad < 13) {
+        return 'No se permiten alumnos menores de 13 años.';
+    }
+
+    return null;
+}
+
 const badge = estado =>
     `<span class="badge b-${esc(estado)}">${esc(estado)}</span>`;
 
@@ -64,6 +106,7 @@ const icons = () => {
 
 function toast(message, error = false) {
     const container = $('#toasts');
+
     if (!container) {
         alert(message);
         return;
@@ -140,7 +183,7 @@ const M = {
             { k: 'dni', l: 'DNI', req: 1 },
             { k: 'telefono', l: 'Teléfono', t: 'tel' },
             { k: 'correo', l: 'Correo electrónico', t: 'email' },
-            { k: 'fecha_nacimiento', l: 'Fecha de nacimiento', t: 'date' },
+            { k: 'fecha_nacimiento', l: 'Fecha de nacimiento', t: 'date', req: 1 },
             { k: 'sexo', l: 'Sexo', o: ['Masculino', 'Femenino', 'Otro'] },
             { k: 'direccion', l: 'Dirección', full: 1 },
             { k: 'entrenador_id', l: 'Entrenador asignado', sel: 'entrenadores', full: 1 },
@@ -396,6 +439,7 @@ function crearCampo(campo, registro = null) {
                 name="${campo.k}"
                 type="${campo.t || 'text'}"
                 value="${esc(valor)}"
+                ${campo.k === 'fecha_nacimiento' ? `max="${fechaHoy()}" required` : ''}
                 ${campo.t === 'number' ? 'min="0" step="0.01"' : ''}
                 ${campo.req ? 'required' : ''}
             >`;
@@ -403,7 +447,7 @@ function crearCampo(campo, registro = null) {
 
     return `
         <div class="${campo.full ? 'full' : ''}">
-            <label>${esc(campo.l)}</label>
+            <label>${esc(campo.l)}${campo.k === 'fecha_nacimiento' ? ' *' : ''}</label>
             ${input}
         </div>`;
 }
@@ -442,6 +486,16 @@ function formulario(t, registro = null) {
         event.preventDefault();
 
         const formData = new FormData(event.target);
+
+        // VALIDAR EDAD AL REGISTRAR O EDITAR ALUMNOS
+        if (t === 'alumnos') {
+            const errorEdad = validarEdadAlumno(formData.get('fecha_nacimiento'));
+
+            if (errorEdad) {
+                return toast(errorEdad, true);
+            }
+        }
+
         const datos = {};
 
         cfg.campos.forEach(c => {
@@ -528,8 +582,8 @@ async function nuevaInscripcion() {
                 </div>
 
                 <div>
-                    <label>Fecha de nacimiento</label>
-                    <input name="fecha_nacimiento" type="date">
+                    <label>Fecha de nacimiento *</label>
+                    <input name="fecha_nacimiento" type="date" max="${fechaHoy()}" required>
                 </div>
 
                 <div>
@@ -624,7 +678,7 @@ async function nuevaInscripcion() {
 
     $('#cancelIns').onclick = closeModal;
 
-    // Actualizar precio y duración al elegir un plan
+    // ACTUALIZAR PRECIO Y DURACION AL ELEGIR UN PLAN
     $('#ins_plan').onchange = event => {
         const option = event.target.selectedOptions[0];
 
@@ -652,13 +706,22 @@ async function nuevaInscripcion() {
 
         const fd = new FormData(event.target);
 
+        // VALIDAR EDAD MINIMA DE 13 AÑOS
+        const errorEdad = validarEdadAlumno(fd.get('fecha_nacimiento'));
+
+        if (errorEdad) {
+            boton.disabled = false;
+            boton.textContent = 'Registrar inscripción';
+            return toast(errorEdad, true);
+        }
+
         const alumno = {
             nombres: fd.get('nombres').trim(),
             apellidos: fd.get('apellidos').trim(),
             dni: fd.get('dni').trim(),
             telefono: fd.get('telefono') || null,
             correo: fd.get('correo') || null,
-            fecha_nacimiento: fd.get('fecha_nacimiento') || null,
+            fecha_nacimiento: fd.get('fecha_nacimiento'),
             sexo: fd.get('sexo') || null,
             direccion: fd.get('direccion') || null,
             fecha_registro: fd.get('fecha_registro'),
@@ -677,7 +740,7 @@ async function nuevaInscripcion() {
             return toast('Selecciona un plan e ingresa un monto válido.', true);
         }
 
-        // Paso 1: guardar alumno
+        // PASO 1: GUARDAR ALUMNO
         const { data: nuevoAlumno, error: errorAlumno } = await db
             .from('alumnos')
             .insert(alumno)
@@ -691,7 +754,7 @@ async function nuevaInscripcion() {
             return toast(`Error al registrar alumno: ${errorAlumno.message}`, true);
         }
 
-        // Paso 2: guardar pago inicial asociado al alumno y al plan
+        // PASO 2: GUARDAR PAGO INICIAL
         const pago = {
             alumno_id: nuevoAlumno.id,
             plan_id: planId,
@@ -883,7 +946,7 @@ function confirmar(table, id) {
 
         closeModal();
 
-        toast('Registro eliminado correctamente');
+        toast('Solicitud de eliminación procesada.');
 
         await crud(table);
     };
